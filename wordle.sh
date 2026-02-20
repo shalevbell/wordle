@@ -18,6 +18,9 @@ if [[ -z "$word" || "$word" == "null" ]]; then
     exit 1
 fi
 
+echo "Guess the 5 letter word"
+echo
+
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
 GRAY='\033[0;90m'
@@ -68,7 +71,7 @@ check_guess() {
 
 for ((attempt=1; attempt<6; attempt++)); do
     while true; do
-        echo -ne "Word $attempt: "
+        echo -ne "$attempt > "
         read -r guess
         guess=${guess,,}
 
@@ -76,6 +79,13 @@ for ((attempt=1; attempt<6; attempt++)); do
             echo "Error: Word must be exactly 5 letters"
             continue
         fi
+
+	dictionary="https://api.dictionaryapi.dev/api/v2/entries/en/$guess"
+
+	if ! curl -fs --connect-timeout 2 --max-time 4 "$dictionary" >/dev/null; then
+  	    echo "Error: Word isnt in the dictionary"
+	    continue
+	fi
         break
     done
 
@@ -90,9 +100,9 @@ for ((attempt=1; attempt<6; attempt++)); do
     fi
 
     echo -e "$result"
-    echo
 done
 
+echo
 echo -e "The word was: ${GREEN}${word}${RESET}"
 echo "You guessed:"
 for result in "${results[@]}"; do
