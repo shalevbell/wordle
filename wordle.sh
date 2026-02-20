@@ -21,9 +21,9 @@ fi
 echo "Guess the 5 letter word"
 echo
 
+RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
-GRAY='\033[0;90m'
 RESET='\033[0m'
 
 results=()
@@ -61,7 +61,7 @@ check_guess() {
             done
 
             if [[ $found -eq 0 ]]; then
-                result+="${GRAY}${char}${RESET}"
+                result+="${RED}${char}${RESET}"
             fi
         fi
     done
@@ -92,14 +92,14 @@ for ((attempt=1; attempt<6; attempt++)); do
     result=$(check_guess "$guess" "$word")
     results+=("$result")
 
+    # Move cursor up one line, return to start, clear line, and print colored result
+    echo -ne "\033[A\r\033[K$attempt > $result\n"
+
     if [[ "$guess" == "$word" ]]; then
-        echo -e "$result"
         echo
         echo "You guessed the word!"
         exit 0
     fi
-
-    echo -e "$result"
 done
 
 echo
