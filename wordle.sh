@@ -93,7 +93,7 @@ for ((attempt=1; attempt<6; attempt++)); do
     results+=("$result")
 
     # Move cursor up one line, return to start, clear line, and print colored result
-    echo -ne "\033[A\r\033[K$attempt > $result\n"
+    echo -e "\033[A\r\033[K$attempt > $result"
 
     if [[ "$guess" == "$word" ]]; then
         echo
